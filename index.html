@@ -2,9 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="css/styles.css" />
     <title>Best Game Ever!</title>
+    
   </head>
   <body>
+    <div>Score:</div><div id="score">0</div>
+    <div>HighScore:</div><div id="highScore">0</div>
+    
+    <h1 id="username">Username</h1>
+    <input id="usernameInput">
+    <button onclick="changeUsername()" id="usernameButton">Submit</button>
     <script src="game.js"></script>
   </body>
 </html>
