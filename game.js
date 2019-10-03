@@ -209,7 +209,9 @@ let update = function() {
 
 
 window.onload = function() {
-  // document.getElementById("highScore").innerHTML = getData("highScore");
+  localStorage.setItem("applicationState", JSON.stringify(applicationState));
+
+  document.getElementById("highScore").innerHTML = getData("highScore");
 
 
   // on refresh current score need to become high score.
