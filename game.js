@@ -209,7 +209,7 @@ let update = function() {
 
 
 window.onload = function() {
-  document.getElementById("highScore").innerHTML = getData("highScore");
+  // document.getElementById("highScore").innerHTML = getData("highScore");
 
 
   // on refresh current score need to become high score.
