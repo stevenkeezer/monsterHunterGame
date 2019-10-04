@@ -9,8 +9,8 @@
     <div class="container">
       <div class="col-lg-12">
         <div class="row">
-          <div>Your score:&nbsp</div>
-          <div id="score">&nbsp0</div>
+          <!-- <div>Your score:&nbsp</div> -->
+          <!-- <div id="score">&nbsp0</div> -->
           <div>&nbsp&nbsp&nbspHighScore:&nbsp</div>
           <div id="highScore">0</div>
           <div>:&nbsp-&nbspUser:&nbsp</div>
@@ -25,8 +25,12 @@
         <input id="usernameInput" />
         <button onclick="changeUsername()" id="usernameButton">Submit</button>
       </div>
+      <div class="row">
+        <button style="z-index: 2;"onClick="window.location.reload();">New Game</button>
+      </div>
     </div>
-
+      
+    </div>
     <script src="game.js"></script>
   </body>
 </html>

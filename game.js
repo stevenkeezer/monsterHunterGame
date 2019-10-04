@@ -179,7 +179,6 @@ function checkIfMonstercCaught() {
   if (heroHasCaughtMonster) {
     applicationState.score += 1;
     updateState("score", applicationState.score);
-    document.getElementById("score").innerHTML = applicationState.score;
 
     monsterX = Math.floor(Math.random() * (476 - 10 + 1)) + 10;
     monsterY = Math.floor(Math.random() * (435 - 10 + 1)) + 10;
@@ -210,6 +209,7 @@ window.onload = function() {
     updateState("highScore", getData("score"));
     updateState("highScoreUser", getData("currentUser"));
     document.getElementById("highScore").innerHTML = getData("highScore");
+    document.getElementById('leaderboard').innerHTML = getData("highScoreUser");
   }
 };
 /**
@@ -228,9 +228,10 @@ const render = function() {
   const ifUserStillHasTime = elapsedTime <= 15;
   if (ifUserStillHasTime) {
     ctx.font = "30px Roboto";
-    ctx.fillText(`Time Left: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 100);
+    ctx.fillText(`Score: ${applicationState.score}`, 20, 30);
+    ctx.fillText(`Time Left: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 60);
   } else {
-    ctx.fillText(`${"Game over"}`, 20, 100);
+    ctx.fillText(`${"Game over"}`, 200, 240);
   }
 };
 

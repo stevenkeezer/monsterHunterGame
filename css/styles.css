@@ -4,14 +4,18 @@ canvas {
     margin-left: auto;
     margin-right: auto;
     display: block;
-    /* width: 800px; */
+    position: relative;
 }
+/* 
+.canvas-container {
+    border: 1px solid;
+    height: 480px;
+    width: 512px;
+    position: absolute;
+    display: flex;
+    z-index: 1;
+} */
 
-.container {
-     /* display: flex;  */
-    /* justify-content: space-around; */
-    /* justify-content: space-around; */
-}
 
 .row {
     display: flex;
