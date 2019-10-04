@@ -22,7 +22,7 @@ let bgReady, heroReady, monsterReady;
 let bgImage, heroImage, monsterImage;
 
 let startTime = Date.now();
-let SECONDS_PER_ROUND = 30;
+let SECONDS_PER_ROUND = 15;
 let elapsedTime = 0;
 
 function loadImages() {
@@ -71,6 +71,7 @@ const applicationState = {
   date: new Date(),
   isGameOver: false,
   currentUser: "Anonymous",
+  highScoreUser: ""
   // gameHistory: [
   //   { score: 11, date: new Date(), username: "Steven" },
   //   { score: 13, username: "John", date: new Date() },
@@ -123,23 +124,16 @@ function getData(key) {
   const appState = JSON.parse(localStorage.getItem("applicationState"));
   return appState[key];
 }
-// console.log(getData('date'))
 
 function changeUsername() {
   let usernameInput = document.getElementById("usernameInput");
   let usernameButton = document.getElementById("usernameButton");
-  username.innerHTML = usernameInput.value;
-  // applicationState.currentUser = usernameInput.value;
-  // localStorage.setItem("applicationState", JSON.stringify(applicationState));
   updateState("currentUser", usernameInput.value);
+  document.getElementById("username").innerHTML = getData("currentUser");
+  usernameInput.value = "";
 }
 
-// console.log(updateState("currentUser", "John fucker"))
-
-let update = function() {
-  // Update the time.
-  elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-
+function move() {
   if (38 in keysDown) {
     // Player is holding up key
     heroY -= 5;
@@ -156,7 +150,9 @@ let update = function() {
     // Player is holding right key
     heroX += 5;
   }
+}
 
+function wrapAround() {
   if (heroX <= 0) {
     heroX = canvas.width - 10;
   }
@@ -172,60 +168,54 @@ let update = function() {
   if (heroY >= canvas.height) {
     heroY = 0;
   }
+}
 
-  // console.log(applicationState.topScores)
-  // Check if player and monster collided. Our images
-  // are about 32 pixels big.
+function checkIfMonstercCaught() {
   const heroHasCaughtMonster =
     heroX <= monsterX + 32 &&
     monsterX <= heroX + 32 &&
     heroY <= monsterY + 32 &&
     monsterY <= heroY + 32;
   if (heroHasCaughtMonster) {
-    // Pick a new location for the monster.
-    // Note: Change this to place the monster at a new, random location.
-
     applicationState.score += 1;
-
     updateState("score", applicationState.score);
-
-
-
-
     document.getElementById("score").innerHTML = applicationState.score;
-
-
-    
-    
-    // highScore = getData('score')
-
 
     monsterX = Math.floor(Math.random() * (476 - 10 + 1)) + 10;
     monsterY = Math.floor(Math.random() * (435 - 10 + 1)) + 10;
   }
+}
+
+let update = function() {
+  // Update the time.
+  elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+  if (elapsedTime >= 15) {
+    return;
+  }
+  move();
+  wrapAround();
+  checkIfMonstercCaught();
 };
-
-
-
 
 window.onload = function() {
-  localStorage.setItem("applicationState", JSON.stringify(applicationState));
+  if (localStorage.length === 0) {
+    localStorage.setItem("applicationState", JSON.stringify(applicationState));
+  }
 
   document.getElementById("highScore").innerHTML = getData("highScore");
+  document.getElementById("username").innerHTML = getData("currentUser");
+  document.getElementById('leaderboard').innerHTML = getData("highScoreUser");
 
-
-  // on refresh current score need to become high score.
-  if (getData("score") > getData("highScore")) {    
-    updateState("highScore", JSON.stringify(getData('score')));
-    document.getElementById("highScore").innerHTML = getData('highScore')
-
-
+  if (getData("score") > getData("highScore")) {
+    updateState("highScore", getData("score"));
+    updateState("highScoreUser", getData("currentUser"));
+    document.getElementById("highScore").innerHTML = getData("highScore");
+  }
 };
-}
 /**
  * This function, render, runs as often as possible.
  */
-var render = function() {
+const render = function() {
   if (bgReady) {
     ctx.drawImage(bgImage, 0, 0);
   }
@@ -235,12 +225,13 @@ var render = function() {
   if (monsterReady) {
     ctx.drawImage(monsterImage, monsterX, monsterY);
   }
-
-  ctx.fillText(
-    `Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`,
-    20,
-    100
-  );
+  const ifUserStillHasTime = elapsedTime <= 15;
+  if (ifUserStillHasTime) {
+    ctx.font = "30px Roboto";
+    ctx.fillText(`Time Left: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 100);
+  } else {
+    ctx.fillText(`${"Game over"}`, 20, 100);
+  }
 };
 
 /**
@@ -248,7 +239,7 @@ var render = function() {
  * update (updates the state of the game, in this case our hero and monster)
  * render (based on the state of our game, draw the right things)
  */
-var main = function() {
+const main = function() {
   update();
   render();
   // Request to do this again ASAP. This is a special method
@@ -258,7 +249,7 @@ var main = function() {
 
 // Cross-browser support for requestAnimationFrame.
 // Safely ignore this line. It's mostly here for people with old web browsers.
-var w = window;
+const w = window;
 requestAnimationFrame =
   w.requestAnimationFrame ||
   w.webkitRequestAnimationFrame ||

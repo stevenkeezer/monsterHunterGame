@@ -1,18 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <link rel="stylesheet" href="css/styles.css" />
     <title>Best Game Ever!</title>
-    
   </head>
   <body>
-    <div>Score:</div><div id="score">0</div>
-    <div>HighScore:</div><div id="highScore">0</div>
-    
-    <h1 id="username">Username</h1>
-    <input id="usernameInput">
-    <button onclick="changeUsername()" id="usernameButton">Submit</button>
+    <div class="container">
+      <div class="col-lg-12">
+        <div class="row">
+          <div>Your score:&nbsp</div>
+          <div id="score">&nbsp0</div>
+          <div>&nbsp&nbsp&nbspHighScore:&nbsp</div>
+          <div id="highScore">0</div>
+          <div>:&nbsp-&nbspUser:&nbsp</div>
+          <div id="leaderboard"></div>
+        </div>
+      </div>
+      <div class="row">
+        <h1 id="username">Username</h1>
+      </div>
+      <div class="row">
+        <div>Name:</div>
+        <input id="usernameInput" />
+        <button onclick="changeUsername()" id="usernameButton">Submit</button>
+      </div>
+    </div>
+
     <script src="game.js"></script>
   </body>
 </html>
