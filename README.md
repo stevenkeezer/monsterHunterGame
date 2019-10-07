@@ -4,15 +4,6 @@ Created with love by: Steven Keezer
   
 This is a simple Canvas-based game that requires a solid understanding of the principles of JavaScript programming to customize. 
 
-## Video Walkthrough
-
-Here's a walkthrough of implemented user stories.
-
-![](http://g.recordit.co/cURdPMSHT2.gif)
-
-## Code Reviews
-
-
 ## Features
 [x] As a player, I can press down on the up, down, left, and right keys to move my hero across the canvas.
 [x] As a player, if I move the hero off the canvas to the right, the hero appears on the left.
