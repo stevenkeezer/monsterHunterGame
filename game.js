@@ -7,8 +7,9 @@
 /* Initialization.
 Here, we create and add our "canvas" to the page.
 We also load all of our images. 
-*/
-
+*/ 
+let elapsedTime = 0;
+let timer;
 let canvas;
 let ctx;
 
@@ -21,9 +22,9 @@ document.body.appendChild(canvas);
 let bgReady, heroReady, monsterReady;
 let bgImage, heroImage, monsterImage;
 
-let startTime = Date.now();
+
 let SECONDS_PER_ROUND = 15;
-let elapsedTime = 0;
+
 
 function loadImages() {
   bgImage = new Image();
@@ -47,6 +48,22 @@ function loadImages() {
   monsterImage.src = "images/monster.png";
 }
 
+function startGame() {
+  document.getElementById("startButton").style.display = "none";
+  monsterX = Math.floor(Math.random() * (476 - 10 + 1)) + 10;
+  monsterY = Math.floor(Math.random() * (435 - 10 + 1)) + 10;
+  timer = setInterval(() => {
+    elapsedTime += 1;
+
+    document.getElementById("timer").innerHTML =
+      SECONDS_PER_ROUND - elapsedTime;
+  }, 1000);
+}
+
+function stopGame() {
+  clearInterval();
+}
+
 /**
  * Setting up our characters.
  *
@@ -57,27 +74,28 @@ function loadImages() {
  * The same applies to the monster.
  */
 
-let heroX = canvas.width / 2;
+let heroX = canvas.width / 2 + 5;
 let heroY = canvas.height / 2;
 
-let monsterX = 100;
-let monsterY = 100;
+let monsterX = 220;
+let monsterY = 239;
 
 let score = 0;
 
 const applicationState = {
   score: 0,
   highScore: 0,
+  userCount: 0,
   date: new Date(),
-  isGameOver: false,
   currentUser: "Anonymous",
-  highScoreUser: ""
-  // gameHistory: [
-  //   { score: 11, date: new Date(), username: "Steven" },
-  //   { score: 13, username: "John", date: new Date() },
-  //   { score: 11, username: "Bob", date: new Date() },
-  //   { score: 8, username: "Sally", date: new Date() }
-  // ]
+  highScoreUser: "",
+  gameHistory: [
+    { score: 3, date: new Date(), username: "Steven" },
+    { score: 5, date: new Date(), username: "Jeff Daniels" },
+    { score: 2, date: new Date(), username: "BigBoy" },
+    { score: 8, date: new Date(), username: "Tupac" },
+    { score: 13, date: new Date(), username: "Jesus H." }
+  ]
 };
 
 /**
@@ -170,7 +188,7 @@ function wrapAround() {
   }
 }
 
-function checkIfMonstercCaught() {
+function checkIfMonsterCaught() {
   const heroHasCaughtMonster =
     heroX <= monsterX + 32 &&
     monsterX <= heroX + 32 &&
@@ -179,7 +197,6 @@ function checkIfMonstercCaught() {
   if (heroHasCaughtMonster) {
     applicationState.score += 1;
     updateState("score", applicationState.score);
-
     monsterX = Math.floor(Math.random() * (476 - 10 + 1)) + 10;
     monsterY = Math.floor(Math.random() * (435 - 10 + 1)) + 10;
   }
@@ -187,13 +204,18 @@ function checkIfMonstercCaught() {
 
 let update = function() {
   // Update the time.
-  elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-  if (elapsedTime >= 15) {
+  if (document.getElementById("timer").innerHTML === "0") {
+    clearInterval(timer);
+  }
+  document.getElementById("score").innerHTML = applicationState.score;
+
+  if (elapsedTime <= 0) {
     return;
   }
+
   move();
   wrapAround();
-  checkIfMonstercCaught();
+  checkIfMonsterCaught();
 };
 
 window.onload = function() {
@@ -201,20 +223,46 @@ window.onload = function() {
     localStorage.setItem("applicationState", JSON.stringify(applicationState));
   }
 
-  document.getElementById("highScore").innerHTML = getData("highScore");
-  document.getElementById("username").innerHTML = getData("currentUser");
-  document.getElementById('leaderboard').innerHTML = getData("highScoreUser");
 
-  if (getData("score") > getData("highScore")) {
-    updateState("highScore", getData("score"));
-    updateState("highScoreUser", getData("currentUser"));
-    document.getElementById("highScore").innerHTML = getData("highScore");
-    document.getElementById('leaderboard').innerHTML = getData("highScoreUser");
-  }
+  updateState('userCount', getData("userCount") + 1);
+  updateState("currentUser", "User" + getData("userCount"));
+  document.getElementById('username').innerHTML = 'User' + getData('userCount');
+
+  let gamehistory = getData("gameHistory");
+  gamehistory.sort((a, b) => b.score - a.score);
+  updateState("gameHistory", gamehistory);
+
+  document.getElementById("highScore").innerHTML = gamehistory[0].score;
+  document.getElementById("leaderboard").innerHTML = gamehistory[0].username;
+  document.getElementById("highScore1").innerHTML = gamehistory[1].score;
+  document.getElementById("leaderboard1").innerHTML = gamehistory[1].username;
+  document.getElementById("highScore2").innerHTML = gamehistory[2].score;
+  document.getElementById("leaderboard2").innerHTML = gamehistory[2].username;
+  document.getElementById("highScore3").innerHTML = gamehistory[3].score;
+  document.getElementById("leaderboard3").innerHTML = gamehistory[3].username;
+  document.getElementById("highScore4").innerHTML = gamehistory[4].score;
+  document.getElementById("leaderboard4").innerHTML = gamehistory[4].username;
 };
+
 /**
  * This function, render, runs as often as possible.
  */
+
+function once(fn, context) {
+  var result;
+  return function() {
+    if (fn) {
+      result = fn.apply(context || this, arguments);
+      fn = null;
+    }
+    return result;
+  };
+}
+
+var canOnlyFireOnce = once(function() {
+  updateGameHis();
+});
+
 const render = function() {
   if (bgReady) {
     ctx.drawImage(bgImage, 0, 0);
@@ -225,16 +273,65 @@ const render = function() {
   if (monsterReady) {
     ctx.drawImage(monsterImage, monsterX, monsterY);
   }
-  const ifUserStillHasTime = elapsedTime <= 15;
+  const ifUserStillHasTime =
+    Number(document.getElementById("timer").innerHTML) > 0;
   if (ifUserStillHasTime) {
-    ctx.font = "30px Roboto";
-    ctx.fillText(`Score: ${applicationState.score}`, 20, 30);
-    ctx.fillText(`Time Left: ${SECONDS_PER_ROUND - elapsedTime}`, 20, 60);
   } else {
-    ctx.fillText(`${"Game over"}`, 200, 240);
+    heroX = canvas.width / 2 - 25;
+    heroY = canvas.height / 2;
+    monsterX = -60;
+    monsterY = -60;
+    document.getElementById("newGameButton").style.display = "flex";
+    document.getElementById("gameOver").style.display = "flex";
+    canOnlyFireOnce();
   }
 };
 
+function updateGameHis() {
+  let gamehistory = getData("gameHistory");
+  gamehistory.push({
+    score: getData("score"),
+    username: getData("currentUser")
+  });
+  gamehistory.sort((a, b) => b.score - a.score);
+  updateState("gameHistory", gamehistory);
+  document.getElementById("highScore").innerHTML = gamehistory[0].score;
+  document.getElementById("leaderboard").innerHTML = gamehistory[0].username;
+  document.getElementById("highScore1").innerHTML = gamehistory[1].score;
+  document.getElementById("leaderboard1").innerHTML = gamehistory[1].username;
+  document.getElementById("highScore2").innerHTML = gamehistory[2].score;
+  document.getElementById("leaderboard2").innerHTML = gamehistory[2].username;
+  document.getElementById("highScore3").innerHTML = gamehistory[3].score;
+  document.getElementById("leaderboard3").innerHTML = gamehistory[3].username;
+  document.getElementById("highScore4").innerHTML = gamehistory[4].score;
+  document.getElementById("leaderboard4").innerHTML = gamehistory[4].username;
+}
+
+var keys = {};
+window.addEventListener(
+  "keydown",
+  function(e) {
+    keys[e.keyCode] = true;
+    switch (e.keyCode) {
+      case 37:
+      case 39:
+      case 38:
+      case 40: // Arrow keys
+        e.preventDefault();
+        break; // Space
+      default:
+        break; // do not block other keys
+    }
+  },
+  false
+);
+window.addEventListener(
+  "keyup",
+  function(e) {
+    keys[e.keyCode] = false;
+  },
+  false
+);
 /**
  * The main game loop. Most every game will have two distinct parts:
  * update (updates the state of the game, in this case our hero and monster)

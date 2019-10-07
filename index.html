@@ -2,34 +2,134 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <!-- minify -->
+    <link
+      href="https://unpkg.com/nes.css@2.2.1/css/nes.min.css"
+      rel="stylesheet"
+    />
+    <!-- latest -->
+    <link
+      href="https://unpkg.com/nes.css@latest/css/nes.min.css"
+      rel="stylesheet"
+    />
+    <!-- core style only -->
+    <link
+      href="https://unpkg.com/nes.css/css/nes-core.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="css/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      class="jsbin"
+      src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"
+    ></script>
+    <meta property="og:title" content="Monster Catch - Crazy Addictive" />
+    <meta
+      property="og:description"
+      content="Single player game. Get the best score you can in the allotted time."
+    />
+    <meta property="og:image" content="./images/preview.jpg" />
+    <meta property="og:url" content="./images/preview.jpg" />
     <title>Best Game Ever!</title>
   </head>
-  <body>
+  <body background="images/vintage-concrete.png">
     <div class="container">
+      <div class="row">
+        <i class="nes-jp-logo"></i>&nbsp;
+        <h1 style="text-align: center">MONSTER HUNT</h1>&nbsp;
+        <i class="snes-jp-logo"></i>
+      </div>
       <div class="col-lg-12">
+        <div class="rowe" style="">
+          <section class="nes-container with-title">
+            <h3 class="title">Leaderboard</h3>
+            <div class="lists">
+              <div class="nes-list is-disc">
+                <div class="rowe">
+                  <div id="leaderboard"></div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <div id="highScore">0</div>
+                </div>
+                <div class="rowe">
+                  <div id="leaderboard1"></div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <div id="highScore1">0</div>
+                </div>
+                <div class="rowe">
+                  <div id="leaderboard2"></div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <div id="highScore2">0</div>
+                </div>
+                <div class="rowe">
+                  <div id="leaderboard3"></div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <div id="highScore3">0</div>
+                </div>
+                <div class="rowe">
+                  <div id="leaderboard4"></div>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <div id="highScore4">0</div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <br />
         <div class="row">
-          <!-- <div>Your score:&nbsp</div> -->
-          <!-- <div id="score">&nbsp0</div> -->
-          <div>&nbsp&nbsp&nbspHighScore:&nbsp</div>
-          <div id="highScore">0</div>
-          <div>:&nbsp-&nbspUser:&nbsp</div>
-          <div id="leaderboard"></div>
+          <div class="nes-field">
+            <div class="row">
+              <label id="yourName" for="name_field">Name:</label>&nbsp;
+              <label id="username"></label>
+            </div>
+            <input
+              type="text"
+              style="float:left"
+              id="usernameInput"
+              class="nes-input"
+            />
+            <button
+              onclick="changeUsername()"
+              class="nes-btn is-primary"
+              id="usernameButton"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+        <br />
+        <div class="row time">
+          <div>Time:</div>
+          <div id="timer">15</div>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div>Score:</div>
+          <div id="score">0</div>
+        </div>
+
+        <div class="canvas-container">
+          <div class="rowe restart">
+            <div
+              style="z-index: 2;"
+              id="startButton"
+              class="nes-btn"
+              onclick="startGame()"
+            >
+              Start
+            </div>
+            <div id="gameOver">GAME OVER</div>
+            <div
+              id="newGameButton"
+              class="nes-btn"
+              onClick="window.location.reload();"
+            >
+              New Game
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <h1 id="username">Username</h1>
-      </div>
-      <div class="row">
-        <div>Name:</div>
-        <input id="usernameInput" />
-        <button onclick="changeUsername()" id="usernameButton">Submit</button>
-      </div>
-      <div class="row">
-        <button style="z-index: 2;"onClick="window.location.reload();">New Game</button>
-      </div>
-    </div>
-      
     </div>
     <script src="game.js"></script>
   </body>
