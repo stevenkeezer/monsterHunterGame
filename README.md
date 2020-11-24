@@ -1,4 +1,4 @@
-# CoderSchool FTW - * Monster Hunt *
+# - * Monster Hunt *
 
 Created with love by: Steven Keezer
   
